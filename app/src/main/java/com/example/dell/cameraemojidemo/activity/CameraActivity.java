@@ -2,7 +2,6 @@ package com.example.dell.cameraemojidemo.activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -45,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -82,8 +82,10 @@ public class CameraActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
 
-        Intent intent = getIntent();
-        picResolutionIndex = intent.getIntExtra("picResolutionIndex",0);
+//        Intent intent = getIntent();
+//        picResolutionIndex = intent.getIntExtra("picResolutionIndex",0);
+        Map<String,Integer> settingMap = Constant.getSettingSelection(CameraActivity.this);
+        picResolutionIndex = settingMap.get("picResolutionPos");
 
         surfaceView = (TextureView) findViewById(R.id.tv_surfaceView);
         btn_take_photo = (Button) findViewById(R.id.btn_take_photo);

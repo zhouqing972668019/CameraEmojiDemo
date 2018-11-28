@@ -16,16 +16,18 @@ import com.example.dell.cameraemojidemo.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button takePhoto;
-    private ImageView picture;
+    private Button btn_takePhoto;
+    private Button btn_setting;
+    private ImageView iv_picture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        takePhoto = (Button) findViewById(R.id.btn_take_photo);
-        picture = (ImageView) findViewById(R.id.iv_picture);
-        takePhoto.setOnClickListener(new View.OnClickListener() {
+        btn_takePhoto = (Button) findViewById(R.id.btn_take_photo);
+        btn_setting = (Button) findViewById(R.id.btn_setting);
+        iv_picture = (ImageView) findViewById(R.id.iv_picture);
+        btn_takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
@@ -33,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     openCamera();
                 }
+            }
+        });
+
+        btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SettingActivity.class));
             }
         });
 
@@ -54,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCamera(){
-        Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+        Intent intent = new Intent(MainActivity.this, CameraActivity.class);
         startActivity(intent);
     }
 

@@ -1,7 +1,6 @@
 package com.example.dell.cameraemojidemo.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -77,9 +76,9 @@ public class SettingActivity extends AppCompatActivity {
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingActivity.this,CameraActivity.class);
-                intent.putExtra("picResolutionIndex",picResolutionIndex);
-                startActivity(intent);
+//                Intent intent = new Intent(SettingActivity.this,CameraActivity.class);
+//                intent.putExtra("picResolutionIndex",picResolutionIndex);
+//                startActivity(intent);
                 finish();
             }
         });
