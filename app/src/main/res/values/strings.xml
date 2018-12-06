@@ -8,7 +8,7 @@
     <string name="server_add_friend_request">好友添加申请</string>
 
 
-    <string name="splash_copyright">Copyright @2015-2016 爱信</string>
+    <string name="splash_copyright">Copyright @2015-2016</string>
 
 
     <string name="guide_enter_app">进入应用</string>
@@ -55,7 +55,7 @@
 
     <string name="setting_title">设置</string>
     <string name="setting_dialog_exit_account">退出当前账号</string>
-    <string name="setting_dialog_close_app">关闭爱信</string>
+    <string name="setting_dialog_close_app">关闭应用</string>
     <string name="setting_new_message_title">新消息提醒</string>
 
 

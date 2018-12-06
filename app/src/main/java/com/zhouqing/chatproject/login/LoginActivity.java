@@ -1,6 +1,10 @@
 package com.zhouqing.chatproject.login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -17,8 +21,6 @@ import com.zhouqing.chatproject.common.ui.BaseActivity;
 import com.zhouqing.chatproject.common.ui.view.MyEditText;
 import com.zhouqing.chatproject.common.util.SPUtil;
 import com.zhouqing.chatproject.common.util.ToastUtil;
-
-
 
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
@@ -45,6 +47,24 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         mPresenter = new LoginPresenter(mActivity, this);
         //开启动画
         //startAnimation();
+
+        if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{ Manifest.permission. WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    System.out.println("You denied the permission!");
+                }
+                break;
+            default:
+        }
     }
 
     @Override
@@ -52,7 +72,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         //获取上次登录的账号密码
         String username = (String) SPUtil.get(LoginActivity.this, "username", "");
         String password = (String) SPUtil.get(LoginActivity.this, "password", "");
-        String ip = (String) SPUtil.get(LoginActivity.this, "ip", "");
+        //String ip = (String) SPUtil.get(LoginActivity.this, "ip", "");
+        String ip = "47.107.244.194";
         mUsername.setText(username);
         mPassword.setText(password);
         mIP.setText(ip);

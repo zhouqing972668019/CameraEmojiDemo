@@ -51,11 +51,6 @@ public class SettingActivity extends BaseActivity {
 
         alertDialog.show();
     }
-    //新消息提醒设置
-    public void newMessage(View view){
-        startActivity(new Intent(SettingActivity.this,MessageAlertActivity.class));
-    }
-
     /**
      * 重新启动应用
      * */

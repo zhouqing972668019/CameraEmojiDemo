@@ -41,4 +41,9 @@ public class DetailActivity extends BaseActivity {
         intent.putExtra(ContactOpenHelper.ContactTable.NICKNAME, mClickNickname);
         startActivity(intent);
     }
+
+    //删除好友
+    public void deleteFriend(){
+
+    }
 }

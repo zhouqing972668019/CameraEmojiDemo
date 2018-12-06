@@ -18,7 +18,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         ll_splash = (LinearLayout) findViewById(R.id.ll_splash);
         mPresenter = new SplashPresenter(this,this);
         initAnimation();
+
     }
+
+
 
     private void initAnimation() {
         AlphaAnimation animation = new AlphaAnimation(0, 1);

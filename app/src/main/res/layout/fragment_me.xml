@@ -58,12 +58,13 @@
 
 
         <com.zhouqing.chatproject.common.ui.view.SettingView
+            android:id="@+id/avatar_pic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:drawableLeft="@drawable/xiangce"
             app:padding="10dp"
-            app:text="相册"/>
+            app:text="头像"/>
 
         <com.zhouqing.chatproject.common.ui.view.SettingView
             android:id="@+id/setting"

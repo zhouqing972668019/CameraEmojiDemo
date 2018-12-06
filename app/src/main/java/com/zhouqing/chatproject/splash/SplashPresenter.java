@@ -10,7 +10,6 @@ import com.zhouqing.chatproject.common.util.SPUtil;
 import com.zhouqing.chatproject.common.util.ThreadUtil;
 import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.common.util.XmppUtil;
-import com.zhouqing.chatproject.guide.GuideActivity;
 import com.zhouqing.chatproject.login.LoginActivity;
 import com.zhouqing.chatproject.main.MainActivity;
 import com.zhouqing.chatproject.service.IMService;
@@ -31,16 +30,11 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void endSplash() {
-        //是否进入引导页面
-        if (!(boolean) SPUtil.get(mContext, "isGuided", false)) {
-            jumpToGuidePage();
+        //是否自动登录
+        if ((boolean) SPUtil.get(mContext, "isAutoLogin", true)) {
+            autoLogin();
         } else {
-            //是否自动登录
-            if ((boolean) SPUtil.get(mContext, "isAutoLogin", true)) {
-                autoLogin();
-            } else {
-                jumpToLoginPage();
-            }
+            jumpToLoginPage();
         }
         ((Activity)mContext).finish();
 
@@ -65,10 +59,6 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     private void jumpToLoginPage() {
         mContext.startActivity(new Intent(mContext, LoginActivity.class));
-    }
-
-    private void jumpToGuidePage() {
-        mContext.startActivity(new Intent(mContext, GuideActivity.class));
     }
 
     /**

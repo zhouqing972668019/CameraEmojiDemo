@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".guide.GuideActivity"
-            android:theme="@style/AppTheme.FullScreen"/>
-
         <activity android:name=".login.LoginActivity"/>
 
         <activity android:name=".register.RegisterActivity"/>
@@ -46,8 +42,6 @@
         <activity android:name=".setting.SettingActivity"/>
 
         <activity android:name=".addFriend.AddFriendActivity"/>
-
-        <activity android:name=".setting.MessageAlertActivity"/>
 
         <service
             android:name=".service.IMService"

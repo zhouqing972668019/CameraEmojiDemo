@@ -8,10 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.zhouqing.chatproject.R;
-import com.zhouqing.chatproject.common.AppApplication;
 import com.zhouqing.chatproject.common.ui.BaseActivity;
 import com.zhouqing.chatproject.common.ui.view.MyEditText;
-import com.zhouqing.chatproject.common.util.SPUtil;
 import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.login.LoginActivity;
 
@@ -35,8 +33,8 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
         mPassword = (MyEditText) findViewById(R.id.password);
         mConfirmPassword = (MyEditText) findViewById(R.id.confirmPassword);
         mIp = (MyEditText) findViewById(R.id.ip);
-        mIp.setText((String) SPUtil.get(AppApplication.getInstance(), "ip", "192.168.0.1"));
-
+        //mIp.setText((String) SPUtil.get(AppApplication.getInstance(), "ip", "192.168.0.1"));
+        mIp.setText("47.107.244.194");
         mPresenter = new RegisterPresenter(this);
 
     }
