@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <include layout="@layout/layout_toolbar"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#fff"/>
 
-        <Button
-            android:id="@+id/btn_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Setting" />
-        <Button
-            android:id="@+id/btn_take_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Take Photo" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/gray"
+        />
 
-        <ImageView
-            android:id="@+id/iv_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:layout_margin="5dp"/>
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/rb_message"
+            style="@style/RadioButton"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_message"
+            android:text="@string/main_message_title"/>
 
-</ScrollView>
+        <RadioButton
+            android:id="@+id/rb_contact"
+            style="@style/RadioButton"
+            android:drawableTop="@drawable/selector_contact"
+            android:text="@string/main_contact_title"/>
+
+        <RadioButton
+            android:id="@+id/rb_me"
+            style="@style/RadioButton"
+            android:drawableTop="@drawable/selector_me"
+            android:text="@string/main_me_title"/>
+
+    </RadioGroup>
+</LinearLayout>
