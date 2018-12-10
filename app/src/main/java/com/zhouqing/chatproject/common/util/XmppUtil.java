@@ -15,9 +15,13 @@ import org.jivesoftware.smack.filter.PacketIDFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Registration;
+import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smackx.packet.VCard;
 
 
 public class XmppUtil {
+
+    private static final String TAG = "XmppUtil";
     private static XMPPConnection connection;
 
     public static XMPPConnection getConnection() {
@@ -99,6 +103,14 @@ public class XmppUtil {
     public static boolean login(String a, String p) {
         try {
             connection.login(a, p);
+            ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
+            VCard vCard = new VCard();
+            vCard.load(connection);
+////            vCard.setNickName("帅的被人砍");
+////            vCard.save(connection);
+//            Log.d(TAG, "avatar:"+vCard.getAvatar());
+//            Log.d(TAG, "nickName:"+vCard.getNickName());
+            Log.d(TAG, "avatarId:"+vCard.getField("avatarId"));
             return true;
         } catch (Exception e) {
             e.printStackTrace();

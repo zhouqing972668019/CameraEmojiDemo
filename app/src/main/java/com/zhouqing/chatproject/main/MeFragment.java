@@ -11,21 +11,35 @@ import android.widget.TextView;
 
 import com.xys.libzxing.zxing.encoding.EncodingUtils;
 import com.zhouqing.chatproject.R;
+import com.zhouqing.chatproject.avatar.AvatarActivity;
+import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.BaseFragment;
 import com.zhouqing.chatproject.common.ui.view.SettingView;
 import com.zhouqing.chatproject.common.util.DensityUtil;
+import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.service.IMService;
 import com.zhouqing.chatproject.setting.SettingActivity;
+
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.packet.VCard;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class MeFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout ll_account;
     private TextView mNickname;
     private TextView mAccount;
+    private SettingView avatar_pic;
     private SettingView mBtnSetting;
     private ImageView ivQRCode;
+    private ImageView avatar;
     private String account;
     private String nickname;
+
+
+    private int selectedAvatar;
 
     @Override
     protected View initUi() {
@@ -35,6 +49,8 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         mAccount = (TextView) view.findViewById(R.id.account);
         mBtnSetting = (SettingView) view.findViewById(R.id.setting);
         ivQRCode = (ImageView) view.findViewById(R.id.iv_qr_code);
+        avatar_pic = view.findViewById(R.id.avatar_pic);
+        avatar = view.findViewById(R.id.avatar);
         return view;
     }
 
@@ -45,11 +61,15 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         nickname = account.substring(0, account.indexOf("@"));
         mNickname.setText(getString(R.string.main_me_message_nickname) + nickname);
         mAccount.setText(getString(R.string.main_me_message_account) + account);
+        if(IMService.AVATAR != null){
+            avatar.setImageResource(Global.AVATARS[Integer.parseInt(IMService.AVATAR)]);
+        }
     }
 
     @Override
     protected void initListener() {
         mBtnSetting.setOnClickListener(this);
+        avatar_pic.setOnClickListener(this);
         ivQRCode.setOnClickListener(this);
         ll_account.setOnClickListener(this);
     }
@@ -64,6 +84,9 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_qr_code:
             case R.id.ll_account:
                 showQrCodeDialog();
+                break;
+            case R.id.avatar_pic:
+                selectAvatar();
                 break;
         }
     }
@@ -92,5 +115,36 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 dialog.dismiss();
             }
         });
+    }
+
+    //选择头像
+    public void selectAvatar(){
+        Intent intent = new Intent(getActivity(),AvatarActivity.class);
+        startActivityForResult(intent,10001);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 10001:
+                if(resultCode == RESULT_OK){
+                    selectedAvatar = data.getIntExtra("selectedAvatar",-1);
+                    if(selectedAvatar != -1){
+                        avatar.setImageResource(Global.AVATARS[selectedAvatar]);
+                        XMPPConnection connection = XmppUtil.getConnection();
+                        if(connection != null){
+                            //Toast.makeText(getActivity(),selectedAvatar+"",Toast.LENGTH_SHORT).show();
+                            VCard vCard = new VCard();
+                            vCard.setField("avatarId",String.valueOf(selectedAvatar));
+                            try {
+                                vCard.save(connection);
+                            } catch (XMPPException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                }
+                    //Toast.makeText(getActivity(),selectedAvatar+"",Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 }

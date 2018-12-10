@@ -53,6 +53,7 @@ import java.util.Map;
 //          而不是每一次打开应用的时候都进行数据的更新
 public class IMService extends Service {
     public static String ACCOUNT;//记录当前登录的账号
+    public static String AVATAR;
     public static XMPPConnection conn;//当前登录的连接
     private static Map<String, Chat> mChatMap = new HashMap<>();
 

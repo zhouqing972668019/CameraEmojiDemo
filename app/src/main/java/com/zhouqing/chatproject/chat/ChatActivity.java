@@ -71,6 +71,7 @@ import android.widget.Toast;
 
 import com.zhouqing.chatproject.R;
 import com.zhouqing.chatproject.common.AppApplication;
+import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.view.AutoFitTextureView;
 import com.zhouqing.chatproject.common.util.EmotionUtil;
 import com.zhouqing.chatproject.common.util.SpanStringUtil;
@@ -473,7 +474,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     holder = (ViewHolder) convertView.getTag();
                 }
                 // 得到数据,展示数据
-
+                if(IMService.AVATAR != null){
+                    holder.head.setImageResource(Global.AVATARS[Integer.parseInt(IMService.AVATAR)]);
+                }
             }
             // 得到数据,展示数据
             cursor.moveToPosition(position);
