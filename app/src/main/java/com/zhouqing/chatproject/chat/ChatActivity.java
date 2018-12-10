@@ -81,8 +81,11 @@ import com.zhouqing.chatproject.service.IMService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -133,7 +136,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         mFacePaint.setStyle(Paint.Style.STROKE);
         mFacePaint.setColor(Color.RED);
 
-        mFile = new File(getExternalFilesDir(null), "pic.jpg");
+        // mFile = new File(getExternalFilesDir(null), "pic.jpg");
 
     }
 
@@ -346,7 +349,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:
-                //takePicture();
+                String prefix = "" + System.currentTimeMillis();
+                mFilePic = new File(getExternalFilesDir(null),  prefix + ".png");
+                mFileText = new File(getExternalFilesDir(null), prefix + ".txt");
+                // save picture
+                takePicture();
+                // save text
+                saveText(getMessage());
                 mPresenter.sendMessage(mClickAccount);
                 break;
             case R.id.iv_emotion:
@@ -368,6 +377,23 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 break;
             }
         }
+    }
+
+    public void saveText(String message) {
+        try {
+            FileOutputStream fos = new FileOutputStream(mFileText);
+            OutputStreamWriter writer=new OutputStreamWriter(fos,"utf-8");
+            writer.write(message);
+            writer.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -560,7 +586,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
     private ImageReader mImageReader;
-    private File mFile;
+    private File mFilePic;
+    private File mFileText;
 
     private Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
@@ -625,7 +652,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         public void onImageAvailable(ImageReader reader) {
             int cameraSensorOrientation = mCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             final Face[] faces = mFaces;
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile, faces,
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFilePic, faces,
                     cameraSensorOrientation, mCameraRect));
         }
 
@@ -1057,8 +1084,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
+                    showToast("Saved: " + mFilePic);
+                    Log.d(TAG, mFilePic.toString());
                     unlockFocus();
                 }
             };

@@ -9,11 +9,11 @@
         android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="1"/>
+        android:alpha="0"/>
 
     <com.zhouqing.chatproject.common.ui.view.AutoFitTextureView
         android:id="@+id/faces"
-        android:alpha="1"
+        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <Button
