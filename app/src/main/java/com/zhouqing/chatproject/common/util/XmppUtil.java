@@ -148,4 +148,38 @@ public class XmppUtil {
             return false;
         }
     }
+
+    /**
+     * 获取当前用户头像
+     */
+    public static int getCurrentUserAvatar(){
+        ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
+        VCard vCard = new VCard();
+        try {
+            vCard.load(connection);
+            if(vCard.getField("avatarId") != null){
+                return Integer.parseInt(vCard.getField("avatarId"));
+            }
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * 获取其他用户头像
+     */
+    public static String getOtherUserAvatar(String jid){
+        ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
+        VCard vCard = new VCard();
+        try {
+            vCard.load(connection,jid);
+            if(vCard.getField("avatarId") != null){
+                return vCard.getField("avatarId");
+            }
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

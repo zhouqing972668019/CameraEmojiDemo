@@ -14,10 +14,6 @@ import com.zhouqing.chatproject.login.LoginActivity;
 import com.zhouqing.chatproject.main.MainActivity;
 import com.zhouqing.chatproject.service.IMService;
 
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.provider.ProviderManager;
-import org.jivesoftware.smackx.packet.VCard;
-
 /**
  * Created by liqingfeng on 2017/5/22.
  */
@@ -89,17 +85,6 @@ public class SplashPresenter implements SplashContract.Presenter {
         //将连接对象保存下来
         IMService.conn = XmppUtil.getConnection();
         IMService.ACCOUNT = username + "@" + IMService.conn.getServiceName();
-        //获取头像
-        ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
-        VCard vCard = new VCard();
-        try {
-            vCard.load(XmppUtil.getConnection());
-            if(vCard.getField("avatarId")!=null){
-                IMService.AVATAR = vCard.getField("avatarId");
-            }
-        } catch (XMPPException e) {
-            e.printStackTrace();
-        }
         //开启服务去获取监听数据
         mContext.startService(new Intent(mContext, IMService.class));
         // 跳转到主页面

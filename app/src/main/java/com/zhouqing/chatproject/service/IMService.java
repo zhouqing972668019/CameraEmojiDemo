@@ -20,6 +20,7 @@ import com.zhouqing.chatproject.common.util.PinyinUtil;
 import com.zhouqing.chatproject.common.util.SPUtil;
 import com.zhouqing.chatproject.common.util.ThreadUtil;
 import com.zhouqing.chatproject.common.util.ToastUtil;
+import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 import com.zhouqing.chatproject.db.SmsOpenHelper;
 import com.zhouqing.chatproject.provider.ContactProvider;
@@ -53,7 +54,6 @@ import java.util.Map;
 //          而不是每一次打开应用的时候都进行数据的更新
 public class IMService extends Service {
     public static String ACCOUNT;//记录当前登录的账号
-    public static String AVATAR;
     public static XMPPConnection conn;//当前登录的连接
     private static Map<String, Chat> mChatMap = new HashMap<>();
 
@@ -180,10 +180,12 @@ public class IMService extends Service {
         if (TextUtils.isEmpty(nickname)) {
             nickname = account.substring(0, account.indexOf("@"));
         }
+        String avatar = XmppUtil.getOtherUserAvatar(account);
+
         ContentValues values = new ContentValues();
         values.put(ContactOpenHelper.ContactTable.ACCOUNT, account);
         values.put(ContactOpenHelper.ContactTable.NICKNAME, nickname);
-        values.put(ContactOpenHelper.ContactTable.AVATAR, "0");
+        values.put(ContactOpenHelper.ContactTable.AVATAR, avatar);
         values.put(ContactOpenHelper.ContactTable.PINYIN, PinyinUtil.getPinyin(nickname));
         values.put(ContactOpenHelper.ContactTable.MY_ACCOUNT, IMService.ACCOUNT);
         // 先update,后插入-->重点

@@ -42,7 +42,7 @@
     <string name="main_me_title">我</string>
     <string name="main_me_message_nickname">昵称：</string>
     <string name="main_me_message_account">账户：</string>
-    <string name="main_me_qrcode_message">扫一扫上面的二维码,添加我的爱信</string>
+    <string name="main_me_qrcode_message">扫一扫上面的二维码,添加我为好友</string>
     <string name="main_contact_title">通讯录</string>
     <string name="main_contact_new_friend">新的朋友</string>
     <string name="main_search_account_empty">搜索账号不能为空</string>

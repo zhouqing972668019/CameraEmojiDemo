@@ -61,8 +61,8 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         nickname = account.substring(0, account.indexOf("@"));
         mNickname.setText(getString(R.string.main_me_message_nickname) + nickname);
         mAccount.setText(getString(R.string.main_me_message_account) + account);
-        if(IMService.AVATAR != null){
-            avatar.setImageResource(Global.AVATARS[Integer.parseInt(IMService.AVATAR)]);
+        if(XmppUtil.getCurrentUserAvatar() != -1){
+            avatar.setImageResource(Global.AVATARS[XmppUtil.getCurrentUserAvatar()]);
         }
     }
 
@@ -96,13 +96,25 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         ImageView iv_qr_code = (ImageView) view.findViewById(R.id.iv_qr_code);
         TextView iv_nickname = (TextView) view.findViewById(R.id.nickname);
         TextView iv_account = (TextView) view.findViewById(R.id.account);
+        ImageView avatar = view.findViewById(R.id.avatar);
 
         iv_nickname.setText(getString(R.string.main_me_message_nickname) + nickname);
         iv_account.setText(getString(R.string.main_me_message_account) + account);
+        int avatarId = -1;
+        if(XmppUtil.getCurrentUserAvatar() != -1){
+            avatarId = Global.AVATARS[XmppUtil.getCurrentUserAvatar()];
+        }
         Bitmap qrCode = EncodingUtils.createQRCode(account,
                 DensityUtil.dp2px(mActivity, 250),
                 DensityUtil.dp2px(mActivity, 250),
                 BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        if(avatarId != -1){
+            qrCode = EncodingUtils.createQRCode(account,
+                    DensityUtil.dp2px(mActivity, 250),
+                    DensityUtil.dp2px(mActivity, 250),
+                    BitmapFactory.decodeResource(getResources(), avatarId));
+            avatar.setImageResource(avatarId);
+        }
         iv_qr_code.setImageBitmap(qrCode);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);

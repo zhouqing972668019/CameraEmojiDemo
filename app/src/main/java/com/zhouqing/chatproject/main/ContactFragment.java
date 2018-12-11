@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhouqing.chatproject.R;
 import com.zhouqing.chatproject.chat.DetailActivity;
+import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.BaseFragment;
 import com.zhouqing.chatproject.common.util.ThreadUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
@@ -80,9 +82,11 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
         //将当前点击的联系人的数据带过去
         String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.ACCOUNT));
         String nickname = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.NICKNAME));
+        String avatar = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.AVATAR));
         Intent intent = new Intent(mActivity, DetailActivity.class);
         intent.putExtra(ContactOpenHelper.ContactTable.ACCOUNT, account);
         intent.putExtra(ContactOpenHelper.ContactTable.NICKNAME, nickname);
+        intent.putExtra(ContactOpenHelper.ContactTable.AVATAR, avatar);
 
         startActivity(intent);
 
@@ -132,18 +136,26 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
             TextView tvNickname = (TextView) view.findViewById(R.id.nickname);
             TextView tvAccount = (TextView) view.findViewById(R.id.account);
             TextView tvIndex = (TextView) view.findViewById(R.id.tv_index);
+            ImageView ivAvatar = view.findViewById(R.id.avatar);
+
 
             String acccount =
                     cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.ACCOUNT));
             String nickName =
                     cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.NICKNAME));
             String currentIndex = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.PINYIN));
+            String avatar = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.ContactTable.AVATAR));
+
             currentIndex = currentIndex.substring(0, 1).toUpperCase();
 
 
             tvNickname.setText(nickName);
             tvAccount.setText(acccount);
             tvIndex.setText(currentIndex);
+            System.out.println("other avatar:"+avatar);
+            if(avatar != null){
+                ivAvatar.setImageResource(Global.AVATARS[Integer.parseInt(avatar)]);
+            }
 
             if (!cursor.moveToPrevious()) {
                 tvIndex.setVisibility(View.VISIBLE);

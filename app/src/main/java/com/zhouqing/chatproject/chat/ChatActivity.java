@@ -75,6 +75,7 @@ import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.view.AutoFitTextureView;
 import com.zhouqing.chatproject.common.util.EmotionUtil;
 import com.zhouqing.chatproject.common.util.SpanStringUtil;
+import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 import com.zhouqing.chatproject.db.SmsOpenHelper;
 import com.zhouqing.chatproject.provider.SmsProvider;
@@ -460,6 +461,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 }
 
                 // 得到数据,展示数据
+                String fromAccount = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.FROM_ACCOUNT));
+                if(XmppUtil.getOtherUserAvatar(fromAccount) != null){
+                    holder.head.setImageResource(Global.AVATARS[Integer.parseInt(XmppUtil.getOtherUserAvatar(fromAccount))]);
+                }
             } else {// 发送
                 if (convertView == null) {
                     convertView = View.inflate(ChatActivity.this, R.layout.item_chat_send, null);
@@ -474,8 +479,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     holder = (ViewHolder) convertView.getTag();
                 }
                 // 得到数据,展示数据
-                if(IMService.AVATAR != null){
-                    holder.head.setImageResource(Global.AVATARS[Integer.parseInt(IMService.AVATAR)]);
+                if(XmppUtil.getCurrentUserAvatar() != -1){
+                    holder.head.setImageResource(Global.AVATARS[XmppUtil.getCurrentUserAvatar()]);
                 }
             }
             // 得到数据,展示数据

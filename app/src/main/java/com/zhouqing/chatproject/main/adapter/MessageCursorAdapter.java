@@ -5,11 +5,14 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhouqing.chatproject.R;
+import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.util.EmotionUtil;
 import com.zhouqing.chatproject.common.util.SpanStringUtil;
+import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 import com.zhouqing.chatproject.db.SmsOpenHelper;
 import com.zhouqing.chatproject.provider.ContactProvider;
@@ -42,10 +45,16 @@ public class MessageCursorAdapter extends CursorAdapter {
         TextView tvTime = (TextView) view.findViewById(R.id.time);
         TextView tvBody = (TextView) view.findViewById(R.id.body);
         TextView tvNickName = (TextView) view.findViewById(R.id.nickname);
+        ImageView ivHead = view.findViewById(R.id.head);
 
         String time = c.getString(c.getColumnIndex(SmsOpenHelper.SmsTable.TIME));
         String body = c.getString(c.getColumnIndex(SmsOpenHelper.SmsTable.BODY));
         String acccount = c.getString(c.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
+        String avatar = null;
+        if(XmppUtil.getOtherUserAvatar(acccount) != null){
+            avatar = XmppUtil.getOtherUserAvatar(acccount);
+        }
+
         String nickName = getNickNameByAccount(acccount);
         // acccount 但是在聊天记录表(sms)里面没有保存别名信息,只有(Contact表里面有)
         tvBody.setText(SpanStringUtil.getEmotionContent(EmotionUtil.EMOTION_CLASSIC_TYPE, mActivity, tvBody, body));
@@ -54,6 +63,9 @@ public class MessageCursorAdapter extends CursorAdapter {
         String formatTime = new SimpleDateFormat("HH:mm").format(new Date(Long
                 .parseLong(time)));
         tvTime.setText(formatTime);
+        if(avatar != null){
+            ivHead.setImageResource(Global.AVATARS[Integer.parseInt(avatar)]);
+        }
     }
 
     /**
