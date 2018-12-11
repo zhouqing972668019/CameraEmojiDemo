@@ -6,6 +6,8 @@ import com.zhouqing.chatproject.common.constant.Global;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketCollector;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -181,5 +183,18 @@ public class XmppUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 删除好友
+     */
+    public static void deleteFriend(String user){
+        Roster roster = connection.getRoster();
+        RosterEntry entry = roster.getEntry(user);
+        try {
+            roster.removeEntry(entry);
+        }catch (XMPPException e){
+            e.printStackTrace();
+        }
     }
 }

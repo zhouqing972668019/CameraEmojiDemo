@@ -1,5 +1,7 @@
 package com.zhouqing.chatproject.chat;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 import com.zhouqing.chatproject.R;
 import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.BaseActivity;
+import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 
 
@@ -52,7 +55,25 @@ public class DetailActivity extends BaseActivity {
     }
 
     //删除好友
-    public void deleteFriend(){
-
+    public void deleteFriend(View view){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(DetailActivity.this);
+        dialog.setTitle("删除好友");
+        dialog.setMessage("确定要删除当前好友吗？");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                XmppUtil.deleteFriend(mClickAccount);
+                dialog.dismiss();
+                DetailActivity.this.finish();
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }
