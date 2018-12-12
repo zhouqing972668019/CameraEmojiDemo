@@ -63,7 +63,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,7 +74,6 @@ import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.view.AutoFitTextureView;
 import com.zhouqing.chatproject.common.util.EmotionUtil;
 import com.zhouqing.chatproject.common.util.SpanStringUtil;
-import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 import com.zhouqing.chatproject.db.SmsOpenHelper;
@@ -104,8 +102,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private EditText etChatMessage;
     private Button btnSend;
     //private ImageView iv_more;
-    private ImageView iv_emotion;
-    private FrameLayout fl_emotion;
+    //private ImageView iv_emotion;
+    //private FrameLayout fl_emotion;
 
     private InputMethodManager imm;//软键盘服务
 
@@ -161,9 +159,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         mListView = (ListView) findViewById(R.id.listview);
         etChatMessage = (EditText) findViewById(R.id.et_chat_message);
         //iv_more = (ImageView) findViewById(R.id.iv_more);
-        iv_emotion = (ImageView) findViewById(R.id.iv_emotion);
+        //iv_emotion = (ImageView) findViewById(R.id.iv_emotion);
         btnSend = (Button) findViewById(R.id.btn_send);
-        fl_emotion = (FrameLayout) findViewById(R.id.fl_emotion);
+        //fl_emotion = (FrameLayout) findViewById(R.id.fl_emotion);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
@@ -184,7 +182,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     protected void initListener() {
         btnSend.setOnClickListener(this);
-        iv_emotion.setOnClickListener(this);
+        //iv_emotion.setOnClickListener(this);
         //iv_more.setOnClickListener(this);
         etChatMessage.setOnClickListener(this);
         //编辑框焦点事件
@@ -193,13 +191,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    ToastUtil.showToast(ChatActivity.this,"获得焦点！");
+                    //ToastUtil.showToast(ChatActivity.this,"获得焦点！");
                     openCameraPreview();
                     mPreviewSurfaceView.setVisibility(View.VISIBLE);
                     mFacesSurfaceView.setVisibility(View.VISIBLE);
                 } else {
                     // 此处为失去焦点时的处理内容
-                    ToastUtil.showToast(ChatActivity.this,"失去焦点！");
+                    //ToastUtil.showToast(ChatActivity.this,"失去焦点！");
                     closeCameraPreview();
                     mPreviewSurfaceView.setVisibility(View.GONE);
                     mFacesSurfaceView.setVisibility(View.GONE);
@@ -238,7 +236,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     imm.hideSoftInputFromWindow(etChatMessage.getWindowToken(), 0);
                 }
                 if (isEmotionShowing || isMoreShowing) {
-                    fl_emotion.setVisibility(View.GONE);
+                    //fl_emotion.setVisibility(View.GONE);
                     isMoreShowing = false;
                     isEmotionShowing = false;
                 }
@@ -295,14 +293,14 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private void changeEmotionStatus() {
         if (!isMoreShowing) {
             if (!isEmotionShowing) {
-                fl_emotion.setVisibility(View.VISIBLE);
+                //fl_emotion.setVisibility(View.VISIBLE);
                 imm.hideSoftInputFromWindow(etChatMessage.getWindowToken(), 0);
                 isEmotionShowing = true;
                 isMoreShowing = false;
                 showEmotionFragment();
 
             } else {
-                fl_emotion.setVisibility(View.GONE);
+                //fl_emotion.setVisibility(View.GONE);
                 imm.showSoftInput(etChatMessage, InputMethodManager.SHOW_IMPLICIT);
                 isEmotionShowing = false;
                 isMoreShowing = false;
@@ -361,12 +359,12 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void onBackPressed() {
         if (isEmotionShowing) {
             isEmotionShowing = false;
-            fl_emotion.setVisibility(View.GONE);
+            //fl_emotion.setVisibility(View.GONE);
             return;
         }
         if (isMoreShowing) {
             isMoreShowing = false;
-            fl_emotion.setVisibility(View.GONE);
+            //fl_emotion.setVisibility(View.GONE);
             return;
         }
         super.onBackPressed();
@@ -395,7 +393,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             case R.id.et_chat_message:
                 //隐藏表情界面
                 if (isEmotionShowing | isMoreShowing) {
-                    fl_emotion.setVisibility(View.GONE);
+                    //fl_emotion.setVisibility(View.GONE);
                     isEmotionShowing = false;
                     isMoreShowing = false;
                 }
