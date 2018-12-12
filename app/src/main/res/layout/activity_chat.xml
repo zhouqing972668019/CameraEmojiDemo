@@ -9,20 +9,15 @@
         android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0"/>
+        android:alpha="1"
+        android:visibility="visible"/>
 
     <com.zhouqing.chatproject.common.ui.view.AutoFitTextureView
         android:id="@+id/faces"
-        android:alpha="0"
+        android:alpha="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <Button
-        android:id="@+id/picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="picture"
-        android:visibility="gone"
-        />
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
 
     <com.zhouqing.chatproject.common.ui.view.KeyboardLinearLayout
         android:id="@+id/ll_keyboard"

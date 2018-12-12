@@ -75,6 +75,7 @@ import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.view.AutoFitTextureView;
 import com.zhouqing.chatproject.common.util.EmotionUtil;
 import com.zhouqing.chatproject.common.util.SpanStringUtil;
+import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.db.ContactOpenHelper;
 import com.zhouqing.chatproject.db.SmsOpenHelper;
@@ -117,6 +118,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private ActionBar mActionBar;
     private ChatContract.Presenter mPresenter;
 
+    int currentUserAvatarId;
+    String otherUserAvatarId;
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppApplication.getInstance().addActivity(this);
@@ -129,7 +133,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         initData();
         initListener();
 
-        findViewById(R.id.picture).setOnClickListener(this);
         mFacesSurfaceView = (AutoFitTextureView) findViewById(R.id.faces);
         mPreviewSurfaceView = (AutoFitTextureView) findViewById(R.id.texture);
 
@@ -170,6 +173,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             mClickAccount = intent.getStringExtra(ContactOpenHelper.ContactTable.ACCOUNT);
             mClickNickname = intent.getStringExtra(ContactOpenHelper.ContactTable.NICKNAME);
             mActionBar.setTitle(mClickNickname);//更改actionBar的名称
+            otherUserAvatarId = XmppUtil.getOtherUserAvatar(mClickAccount);
+            currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
         }
     }
 
@@ -182,6 +187,25 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         iv_emotion.setOnClickListener(this);
         //iv_more.setOnClickListener(this);
         etChatMessage.setOnClickListener(this);
+        //编辑框焦点事件
+        etChatMessage.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    ToastUtil.showToast(ChatActivity.this,"获得焦点！");
+                    openCameraPreview();
+                    mPreviewSurfaceView.setVisibility(View.VISIBLE);
+                    mFacesSurfaceView.setVisibility(View.VISIBLE);
+                } else {
+                    // 此处为失去焦点时的处理内容
+                    ToastUtil.showToast(ChatActivity.this,"失去焦点！");
+                    closeCameraPreview();
+                    mPreviewSurfaceView.setVisibility(View.GONE);
+                    mFacesSurfaceView.setVisibility(View.GONE);
+                }
+            }
+        });
         etChatMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -195,6 +219,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 String s = editable.toString();
                 if (TextUtils.isEmpty(s)) {
                     btnSend.setVisibility(View.GONE);
@@ -351,13 +376,14 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:
+                //etChatMessage.clearFocus();
                 String prefix = "" + System.currentTimeMillis();
                 mFilePic = new File(getExternalFilesDir(null),  prefix + ".png");
                 mFileText = new File(getExternalFilesDir(null), prefix + ".txt");
                 // save picture
-                //takePicture();
+                takePicture();
                 // save text
-                //saveText(getMessage());
+                saveText(getMessage());
                 mPresenter.sendMessage(mClickAccount);
                 break;
             case R.id.iv_emotion:
@@ -374,10 +400,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     isMoreShowing = false;
                 }
                 break;
-            case R.id.picture: {
-                takePicture();
-                break;
-            }
         }
     }
 
@@ -461,9 +483,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 }
 
                 // 得到数据,展示数据
-                String fromAccount = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.FROM_ACCOUNT));
-                if(XmppUtil.getOtherUserAvatar(fromAccount) != null){
-                    holder.head.setImageResource(Global.AVATARS[Integer.parseInt(XmppUtil.getOtherUserAvatar(fromAccount))]);
+                if(otherUserAvatarId != null){
+                    holder.head.setImageResource(Global.AVATARS[Integer.parseInt(otherUserAvatarId)]);
                 }
             } else {// 发送
                 if (convertView == null) {
@@ -478,9 +499,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-                // 得到数据,展示数据
-                if(XmppUtil.getCurrentUserAvatar() != -1){
-                    holder.head.setImageResource(Global.AVATARS[XmppUtil.getCurrentUserAvatar()]);
+                 //得到数据,展示数据
+                if(currentUserAvatarId != -1){
+                    holder.head.setImageResource(Global.AVATARS[currentUserAvatarId]);
                 }
             }
             // 得到数据,展示数据
@@ -767,24 +788,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @Override
     public void onResume() {
         super.onResume();
-        startBackgroundThread();
-
-        // When the screen is turned off and turned back on, the SurfaceTexture is already
-        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
-        // the SurfaceTextureListener).
-        if (mPreviewSurfaceView.isAvailable()) {
-            openCamera(mPreviewSurfaceView.getWidth(), mPreviewSurfaceView.getHeight());
-        } else {
-            mPreviewSurfaceView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
+        //openCameraPreview();
     }
 
     @Override
     public void onPause() {
-        closeCamera();
-        stopBackgroundThread();
         super.onPause();
+        //closeCameraPreview();
     }
 
     /**
@@ -1095,6 +1105,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     showToast("Saved: " + mFilePic);
                     Log.d(TAG, mFilePic.toString());
                     unlockFocus();
+                    etChatMessage.clearFocus();
                 }
             };
 
@@ -1138,7 +1149,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
+    private class ImageSaver implements Runnable {
 
         /**
          * The JPEG image
@@ -1364,5 +1375,29 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     }
 
+    /**
+     * 打开预览窗口
+     */
+    public void openCameraPreview(){
+        startBackgroundThread();
+
+        // When the screen is turned off and turned back on, the SurfaceTexture is already
+        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
+        // a camera and start preview from here (otherwise, we wait until the surface is ready in
+        // the SurfaceTextureListener).
+        if (mPreviewSurfaceView.isAvailable()) {
+            openCamera(mPreviewSurfaceView.getWidth(), mPreviewSurfaceView.getHeight());
+        } else {
+            mPreviewSurfaceView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
+    }
+
+    /**
+     * 关闭预览窗口
+     */
+    public void closeCameraPreview(){
+        closeCamera();
+        stopBackgroundThread();
+    }
 
 }
