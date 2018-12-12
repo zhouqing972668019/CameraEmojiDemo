@@ -156,6 +156,9 @@ public class ContactFragment extends BaseFragment implements ContactContract.Vie
             if(avatar != null){
                 ivAvatar.setImageResource(Global.AVATARS[Integer.parseInt(avatar)]);
             }
+            else{
+                ivAvatar.setImageResource(R.mipmap.ic_launcher);
+            }
 
             if (!cursor.moveToPrevious()) {
                 tvIndex.setVisibility(View.VISIBLE);

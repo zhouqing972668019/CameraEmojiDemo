@@ -133,6 +133,13 @@ public class IMService extends Service {
                     new PacketListener() {
                         @Override
                         public void processPacket(Packet packet) {
+                            Roster roster = conn.getRoster();
+                            try {
+                                final String name = packet.getFrom().substring(0, packet.getFrom().indexOf("@"));
+                                roster.createEntry(packet.getFrom(), name, null);
+                            } catch (XMPPException e) {
+                                e.printStackTrace();
+                            }
                             //接收到添加好友申请
                             ToastUtil.showToastSafe(getApplication(), getString(R.string.server_add_friend_request));
                         }

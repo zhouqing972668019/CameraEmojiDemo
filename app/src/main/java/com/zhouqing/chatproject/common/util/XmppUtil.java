@@ -20,6 +20,11 @@ import org.jivesoftware.smack.packet.Registration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.packet.VCard;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
 
 public class XmppUtil {
 
@@ -105,14 +110,10 @@ public class XmppUtil {
     public static boolean login(String a, String p) {
         try {
             connection.login(a, p);
-            ProviderManager.getInstance().addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
-            VCard vCard = new VCard();
-            vCard.load(connection);
-////            vCard.setNickName("帅的被人砍");
-////            vCard.save(connection);
-//            Log.d(TAG, "avatar:"+vCard.getAvatar());
-//            Log.d(TAG, "nickName:"+vCard.getNickName());
-            Log.d(TAG, "avatarId:"+vCard.getField("avatarId"));
+
+            Log.d(TAG, "zq:"+getUserState("zq"));
+            Log.d(TAG, "lll:"+getUserState("lll"));
+            Log.d(TAG, "cly:"+getUserState("cly"));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,5 +197,39 @@ public class XmppUtil {
         }catch (XMPPException e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 判断用户状态 0-不存在 1-在线 2-离线
+     */
+    public static int getUserState(String user){
+        String url = "http://"+Global.HOST+":9090/plugins/presence/status?" +
+                "jid="+ user +"@"+ Global.HOST +"&type=xml";
+        int shOnLineState = 0; // 不存在
+        try {
+            URL oUrl = new URL(url);
+            URLConnection oConn = oUrl.openConnection();
+            if (oConn != null) {
+                BufferedReader oIn = new BufferedReader(new InputStreamReader(
+                        oConn.getInputStream()));
+                if (null != oIn) {
+                    String strFlag = oIn.readLine();
+                    oIn.close();
+                    System.out.println("strFlag"+strFlag);
+                    if (strFlag.indexOf("type=\"unavailable\"") >= 0) {
+                        shOnLineState = 2;
+                    }
+                    if (strFlag.indexOf("type=\"error\"") >= 0) {
+                        shOnLineState = 0;
+                    } else if (strFlag.indexOf("priority") >= 0
+                            || strFlag.indexOf("id=\"") >= 0) {
+                        shOnLineState = 1;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return shOnLineState;
     }
 }

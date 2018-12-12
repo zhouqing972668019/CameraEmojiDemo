@@ -355,9 +355,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 mFilePic = new File(getExternalFilesDir(null),  prefix + ".png");
                 mFileText = new File(getExternalFilesDir(null), prefix + ".txt");
                 // save picture
-                takePicture();
+                //takePicture();
                 // save text
-                saveText(getMessage());
+                //saveText(getMessage());
                 mPresenter.sendMessage(mClickAccount);
                 break;
             case R.id.iv_emotion:

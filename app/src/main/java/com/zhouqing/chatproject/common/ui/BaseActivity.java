@@ -19,6 +19,7 @@ import com.zhouqing.chatproject.common.AppApplication;
 public abstract class BaseActivity extends AppCompatActivity {
     protected ActionBar mActionBar;
     protected BaseActivity mActivity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -66,6 +66,9 @@ public class MessageCursorAdapter extends CursorAdapter {
         if(avatar != null){
             ivHead.setImageResource(Global.AVATARS[Integer.parseInt(avatar)]);
         }
+        else{
+            ivHead.setImageResource(R.mipmap.ic_launcher);
+        }
     }
 
     /**

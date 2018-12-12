@@ -5,7 +5,7 @@
 
 
     <string name="server_send_message_error">发送失败,请检查网络</string>
-    <string name="server_add_friend_request">好友添加申请</string>
+    <string name="server_add_friend_request">接受添加好友请求成功</string>
 
 
     <string name="splash_copyright">Copyright @2015-2016</string>
