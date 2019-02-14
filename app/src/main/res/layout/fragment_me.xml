@@ -82,7 +82,7 @@
             android:layout_marginTop="15dp"
             app:drawableLeft="@drawable/manage"
             app:padding="10dp"
-            app:text="管理"/>
+            app:text="标注"/>
     </LinearLayout>
 </ScrollView>
 

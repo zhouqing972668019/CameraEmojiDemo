@@ -384,7 +384,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 takePicture();
                 // save text
                 saveText(getMessage());
-                mPresenter.sendMessage(mClickAccount);
+                mPresenter.sendMessage(mClickAccount,prefix + ".png");
                 break;
             case R.id.iv_emotion:
                 changeEmotionStatus();
@@ -1102,7 +1102,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFilePic);
+                    //showToast("Saved: " + mFilePic);
                     Log.d(TAG, mFilePic.toString());
                     unlockFocus();
                     //etChatMessage.clearFocus();

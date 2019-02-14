@@ -71,7 +71,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void sendMessage(final String clickAccount) {
+    public void sendMessage(final String clickAccount, final String facePic) {
         final String body = mView.getMessage();
         if (!TextUtils.isEmpty(body)) {
             ThreadUtil.runOnThread(new Runnable() {
@@ -88,7 +88,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
                     //发送消息 并保存消息 通过绑定服务调用服务中的方法
                     if (myBinder != null) {
-                        myBinder.sendMessage(msg);
+                        myBinder.sendMessage(msg,facePic);
                     } else {
                         ToastUtil.showToastSafe(mContext, mContext.getString(R.string.chat_send_message_error));
                     }

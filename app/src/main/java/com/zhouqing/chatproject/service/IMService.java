@@ -75,8 +75,8 @@ public class IMService extends Service {
     }
 
     public class MyBinder extends Binder {
-        public void sendMessage(Message message) {
-            IMService.this.sendMessage(message);
+        public void sendMessage(Message message,String facePic) {
+            IMService.this.sendMessage(message,facePic);
         }
     }
 
@@ -208,7 +208,7 @@ public class IMService extends Service {
     /**
      * 发送消息
      */
-    public void sendMessage(Message message) {
+    public void sendMessage(Message message,String facePic) {
         //2.创建聊天对象 Chat
         String accountTo = message.getTo();
         if (mChatMap.get(accountTo) == null) {
@@ -220,7 +220,7 @@ public class IMService extends Service {
 
         try {
             mChat.sendMessage(message);
-            saveMessage(getApplicationContext(), message, message.getTo(), message.getFrom());
+            saveMessage(getApplicationContext(), message, message.getTo(), message.getFrom(), facePic);
         } catch (XMPPException e) {
             e.printStackTrace();
             ToastUtil.showToastSafe(getApplicationContext(), getString(R.string.server_send_message_error));
@@ -230,7 +230,7 @@ public class IMService extends Service {
     /**
      * 缓存消息到本地数据库中
      */
-    private void saveMessage(Context context, Message msg, String sessionAccount, String myAccount) {
+    private void saveMessage(Context context, Message msg, String sessionAccount, String myAccount, String facePic) {
         ContentValues values = new ContentValues();
 
         //对账号进行处理
@@ -247,6 +247,8 @@ public class IMService extends Service {
         values.put(SmsOpenHelper.SmsTable.TIME, System.currentTimeMillis());
         values.put(SmsOpenHelper.SmsTable.SESSION_ACCOUNT, sessionAccount);
         values.put(SmsOpenHelper.SmsTable.MY_ACCOUNT, myAccount);
+        values.put(SmsOpenHelper.SmsTable.FACE_PIC,facePic);
+        //values.put(SmsOpenHelper.SmsTable.EMOTION,"");
         context.getContentResolver().insert(SmsProvider.URI_SMS, values);
     }
 
@@ -357,7 +359,7 @@ public class IMService extends Service {
                 @Override
                 public void run() {
                     //缓存消息
-                    saveMessage(getApplicationContext(), message, message.getFrom(), message.getTo());
+                    saveMessage(getApplicationContext(), message, message.getFrom(), message.getTo(),"");
                     ThreadUtil.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

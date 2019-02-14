@@ -16,8 +16,8 @@ import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.BaseFragment;
 import com.zhouqing.chatproject.common.ui.view.SettingView;
 import com.zhouqing.chatproject.common.util.DensityUtil;
-import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.common.util.XmppUtil;
+import com.zhouqing.chatproject.manage.ManageActivity;
 import com.zhouqing.chatproject.service.IMService;
 import com.zhouqing.chatproject.setting.SettingActivity;
 
@@ -75,13 +75,13 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         avatar_pic.setOnClickListener(this);
         ivQRCode.setOnClickListener(this);
         ll_account.setOnClickListener(this);
-        manage.setOnLongClickListener(new View.OnLongClickListener() {
+        manage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                ToastUtil.showToast(getContext(),"触发");
-                return true;
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(),ManageActivity.class));
             }
         });
+
     }
 
 
