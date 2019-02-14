@@ -16,6 +16,7 @@ import com.zhouqing.chatproject.common.constant.Global;
 import com.zhouqing.chatproject.common.ui.BaseFragment;
 import com.zhouqing.chatproject.common.ui.view.SettingView;
 import com.zhouqing.chatproject.common.util.DensityUtil;
+import com.zhouqing.chatproject.common.util.ToastUtil;
 import com.zhouqing.chatproject.common.util.XmppUtil;
 import com.zhouqing.chatproject.service.IMService;
 import com.zhouqing.chatproject.setting.SettingActivity;
@@ -35,6 +36,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     private SettingView mBtnSetting;
     private ImageView ivQRCode;
     private ImageView avatar;
+    private SettingView manage;
     private String account;
     private String nickname;
 
@@ -49,6 +51,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         mAccount = (TextView) view.findViewById(R.id.account);
         mBtnSetting = (SettingView) view.findViewById(R.id.setting);
         ivQRCode = (ImageView) view.findViewById(R.id.iv_qr_code);
+        manage = view.findViewById(R.id.manage);
         avatar_pic = view.findViewById(R.id.avatar_pic);
         avatar = view.findViewById(R.id.avatar);
         return view;
@@ -72,6 +75,13 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         avatar_pic.setOnClickListener(this);
         ivQRCode.setOnClickListener(this);
         ll_account.setOnClickListener(this);
+        manage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ToastUtil.showToast(getContext(),"触发");
+                return true;
+            }
+        });
     }
 
 
@@ -88,6 +98,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.avatar_pic:
                 selectAvatar();
                 break;
+
         }
     }
 
@@ -159,4 +170,6 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 }
         }
     }
+
+
 }

@@ -74,6 +74,15 @@
             app:drawableLeft="@drawable/setting"
             app:padding="10dp"
             app:text="设置"/>
+
+        <com.zhouqing.chatproject.common.ui.view.SettingView
+            android:id="@+id/manage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:drawableLeft="@drawable/manage"
+            app:padding="10dp"
+            app:text="管理"/>
     </LinearLayout>
 </ScrollView>
 
