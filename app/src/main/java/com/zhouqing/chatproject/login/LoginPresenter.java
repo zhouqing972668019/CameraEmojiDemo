@@ -52,6 +52,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 //将连接对象保存下来
                 IMService.conn = XmppUtil.getConnection();
                 IMService.ACCOUNT = username + "@" + IMService.conn.getServiceName();
+                IMService.NICKNAME = username;
                 //开启服务去获取监听数据
                 mActivity.startService(new Intent(mActivity, IMService.class));
                 // 跳转到主页面

@@ -13,8 +13,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -80,7 +78,6 @@ import com.zhouqing.chatproject.db.SmsOpenHelper;
 import com.zhouqing.chatproject.provider.SmsProvider;
 import com.zhouqing.chatproject.service.IMService;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -186,24 +183,24 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         //iv_more.setOnClickListener(this);
         etChatMessage.setOnClickListener(this);
         //编辑框焦点事件
-        etChatMessage.setOnFocusChangeListener(new android.view.View.
-                OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    //ToastUtil.showToast(ChatActivity.this,"获得焦点！");
-                    openCameraPreview();
-                    mPreviewSurfaceView.setVisibility(View.VISIBLE);
-                    mFacesSurfaceView.setVisibility(View.VISIBLE);
-                } else {
-                    // 此处为失去焦点时的处理内容
-                    //ToastUtil.showToast(ChatActivity.this,"失去焦点！");
-                    closeCameraPreview();
-                    mPreviewSurfaceView.setVisibility(View.GONE);
-                    mFacesSurfaceView.setVisibility(View.GONE);
-                }
-            }
-        });
+//        etChatMessage.setOnFocusChangeListener(new android.view.View.
+//                OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    //ToastUtil.showToast(ChatActivity.this,"获得焦点！");
+//                    openCameraPreview();
+//                    mPreviewSurfaceView.setVisibility(View.VISIBLE);
+//                    mFacesSurfaceView.setVisibility(View.VISIBLE);
+//                } else {
+//                    // 此处为失去焦点时的处理内容
+//                    //ToastUtil.showToast(ChatActivity.this,"失去焦点！");
+//                    closeCameraPreview();
+//                    mPreviewSurfaceView.setVisibility(View.GONE);
+//                    mFacesSurfaceView.setVisibility(View.GONE);
+//                }
+//            }
+//        });
         etChatMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -376,8 +373,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             case R.id.btn_send:
                 //etChatMessage.clearFocus();
                 String prefix = "" + System.currentTimeMillis();
-                mFilePic = new File(getExternalFilesDir(null),  prefix + ".png");
-                mFileText = new File(getExternalFilesDir(null), prefix + ".txt");
+                //存储照片与文字
+                String path = Global.PROJECT_FILE_PATH +IMService.NICKNAME +"/"+mClickNickname+"/";
+                if (!new File(path).exists()) {
+                    new File(path).mkdirs();
+                }
+                mFilePic = new File(path,  prefix + ".png");
+                mFileText = new File(path, prefix + ".txt");
                 // save picture
                 takePicture();
                 // save text
@@ -786,13 +788,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @Override
     public void onResume() {
         super.onResume();
-        //openCameraPreview();
+        openCameraPreview();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //closeCameraPreview();
+        closeCameraPreview();
     }
 
     /**
@@ -1103,7 +1105,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     showToast("Saved: " + mFilePic);
                     Log.d(TAG, mFilePic.toString());
                     unlockFocus();
-                    etChatMessage.clearFocus();
+                    //etChatMessage.clearFocus();
                 }
             };
 
@@ -1180,54 +1182,54 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
 
-            if (mFaces != null && mFaces.length > 0) {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-
-
-                int wRatio = (int) Math.ceil(options.outWidth / (float) 1080);
-                int hRatio = (int) Math.ceil(options.outHeight / (float) 1920);
-                int ratio = 1;
-                //获取采样率
-                if (wRatio > 1 && hRatio > 1) {
-                    if (wRatio > hRatio) {
-                        ratio = wRatio;
-                    } else {
-                        ratio = hRatio;
-                    }
-                }
-                options.inSampleSize = ratio;
-                options.inJustDecodeBounds = false;
-                options.inMutable = true;
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                Bitmap face = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-
-
-                float x = ((mCameraRect.bottom - mCameraRect.top) / (float) face.getWidth());
-                float y = ((mCameraRect.right - mCameraRect.left) / (float) face.getHeight());
-
-                Rect bounds = mFaces[0].getBounds();
-                switch (mCameraSensorOrientation) {
-                    case 90:
-                        face = Bitmap.createBitmap(face, (int) (face.getWidth() - bounds.bottom / y),
-                                (int) (bounds.left / x),
-                                (int) ((bounds.bottom - bounds.top) / y),
-                                (int) ((bounds.right - bounds.left) / x));
-                        break;
-                    case 270:
-                        face = Bitmap.createBitmap(face, (int) (bounds.top / x),
-                                (int) (face.getHeight() - bounds.right / y),
-                                (int) ((bounds.bottom - bounds.top) / x),
-                                (int) ((bounds.right - bounds.left) / y));
-                        break;
-                }
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                face.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                bytes = stream.toByteArray();
-            }
+//            if (mFaces != null && mFaces.length > 0) {
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//
+//                options.inJustDecodeBounds = true;
+//                BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+//
+//
+//                int wRatio = (int) Math.ceil(options.outWidth / (float) 1080);
+//                int hRatio = (int) Math.ceil(options.outHeight / (float) 1920);
+//                int ratio = 1;
+//                //获取采样率
+//                if (wRatio > 1 && hRatio > 1) {
+//                    if (wRatio > hRatio) {
+//                        ratio = wRatio;
+//                    } else {
+//                        ratio = hRatio;
+//                    }
+//                }
+//                options.inSampleSize = ratio;
+//                options.inJustDecodeBounds = false;
+//                options.inMutable = true;
+//                options.inPreferredConfig = Bitmap.Config.RGB_565;
+//                Bitmap face = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+//
+//
+//                float x = ((mCameraRect.bottom - mCameraRect.top) / (float) face.getWidth());
+//                float y = ((mCameraRect.right - mCameraRect.left) / (float) face.getHeight());
+//
+//                Rect bounds = mFaces[0].getBounds();
+//                switch (mCameraSensorOrientation) {
+//                    case 90:
+//                        face = Bitmap.createBitmap(face, (int) (face.getWidth() - bounds.bottom / y),
+//                                (int) (bounds.left / x),
+//                                (int) ((bounds.bottom - bounds.top) / y),
+//                                (int) ((bounds.right - bounds.left) / x));
+//                        break;
+//                    case 270:
+//                        face = Bitmap.createBitmap(face, (int) (bounds.top / x),
+//                                (int) (face.getHeight() - bounds.right / y),
+//                                (int) ((bounds.bottom - bounds.top) / x),
+//                                (int) ((bounds.right - bounds.left) / y));
+//                        break;
+//                }
+//
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                face.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                bytes = stream.toByteArray();
+//            }
 
 
             FileOutputStream output = null;

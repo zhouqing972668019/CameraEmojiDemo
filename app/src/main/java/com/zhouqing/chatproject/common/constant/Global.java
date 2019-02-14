@@ -1,6 +1,8 @@
 package com.zhouqing.chatproject.common.constant;
 
 
+import android.os.Environment;
+
 import com.zhouqing.chatproject.R;
 import com.zhouqing.chatproject.common.AppApplication;
 import com.zhouqing.chatproject.common.util.SPUtil;
@@ -17,4 +19,8 @@ public class Global {
             R.drawable.avatar16,R.drawable.avatar17,R.drawable.avatar18,R.drawable.avatar19,R.drawable.avatar20,
             R.drawable.avatar21,R.drawable.avatar22,R.drawable.avatar23,R.drawable.avatar24,R.drawable.avatar25
     };
+
+    //项目存储文件的路径
+    public static String PROJECT_FILE_PATH
+            = Environment.getExternalStorageDirectory() + "/CameraEmojiDemo/";
 }
