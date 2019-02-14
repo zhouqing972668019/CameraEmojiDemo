@@ -374,7 +374,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 //etChatMessage.clearFocus();
                 String prefix = "" + System.currentTimeMillis();
                 //存储照片与文字
-                String path = Global.PROJECT_FILE_PATH +IMService.NICKNAME +"/"+mClickNickname+"/";
+                String path = Global.PROJECT_FILE_PATH +Global.accountToNickName(IMService.ACCOUNT) +"/"+mClickNickname+"/";
                 if (!new File(path).exists()) {
                     new File(path).mkdirs();
                 }

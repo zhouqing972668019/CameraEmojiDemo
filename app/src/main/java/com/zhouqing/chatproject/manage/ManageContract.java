@@ -9,6 +9,7 @@ public class ManageContract {
     public interface Presenter extends BasePresenter {
         void getContact();
         void getDialogueMessage(final String clickAccout);
+        void inputEmotion(Cursor cursor);
     }
 
     public interface View extends BaseView<ManageContract.Presenter> {

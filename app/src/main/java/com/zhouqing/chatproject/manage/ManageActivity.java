@@ -27,7 +27,7 @@ import com.zhouqing.chatproject.service.IMService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ManageActivity extends BaseActivity implements ManageContract.View{
+public class ManageActivity extends BaseActivity implements ManageContract.View,AdapterView.OnItemClickListener{
 
     private Spinner spSession;
     private ListView mListView;
@@ -56,6 +56,12 @@ public class ManageActivity extends BaseActivity implements ManageContract.View{
             });
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     @Override
@@ -91,6 +97,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View{
 
             }
         });
+        mListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -134,6 +141,13 @@ public class ManageActivity extends BaseActivity implements ManageContract.View{
     @Override
     public void setPresenter(ManageContract.Presenter presenter) {
         this.mPresenter = presenter;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor c = mCursorAdapter.getCursor();
+        c.moveToPosition(position);
+        mPresenter.inputEmotion(c);
     }
 
     /**

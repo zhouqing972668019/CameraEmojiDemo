@@ -1,9 +1,11 @@
 package com.zhouqing.chatproject.manage;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 
 import com.zhouqing.chatproject.common.util.ThreadUtil;
+import com.zhouqing.chatproject.db.SmsOpenHelper;
 import com.zhouqing.chatproject.provider.SmsProvider;
 import com.zhouqing.chatproject.service.IMService;
 
@@ -55,5 +57,25 @@ public class ManagePresenter implements ManageContract.Presenter{
                 });
             }
         });
+    }
+
+    @Override
+    public void inputEmotion(Cursor cursor) {
+        // 拿到nickName-->显示效果
+        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+        String body = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.BODY));
+        String fromAccount = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.FROM_ACCOUNT));
+        String toAccount = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.TO_ACCOUNT));
+        String facePic = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.FACE_PIC));
+
+        Intent intent = new Intent(mAcitivity, InputEmotionActivity.class);
+
+        intent.putExtra("id", id);
+        intent.putExtra("toUser", toAccount);
+        intent.putExtra("facePic",facePic);
+        intent.putExtra("body",body);
+        intent.putExtra("fromUser",fromAccount);
+
+        mAcitivity.startActivity(intent);
     }
 }

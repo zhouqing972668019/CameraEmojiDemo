@@ -58,7 +58,8 @@
             android:exported="true" />
 
         <activity android:name=".avatar.AvatarActivity" />
-        <activity android:name=".manage.ManageActivity"></activity>
+        <activity android:name=".manage.ManageActivity" />
+        <activity android:name=".manage.InputEmotionActivity"></activity>
     </application>
 
 </manifest>
