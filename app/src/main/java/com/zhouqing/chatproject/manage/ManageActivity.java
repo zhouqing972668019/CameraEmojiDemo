@@ -1,12 +1,14 @@
 package com.zhouqing.chatproject.manage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
@@ -27,7 +29,7 @@ import com.zhouqing.chatproject.service.IMService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ManageActivity extends BaseActivity implements ManageContract.View,AdapterView.OnItemClickListener{
+public class ManageActivity extends BaseActivity implements ManageContract.View,AdapterView.OnItemClickListener,AbsListView.OnScrollListener {
 
     private Spinner spSession;
     private ListView mListView;
@@ -38,6 +40,15 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
 
     int currentUserAvatarId;
     String otherUserAvatarId;
+
+    private int firstPosition; //滑动以后的可见的第一条数据
+    private int top;//滑动以后的第一条item的可见部分距离top的像素值
+    private SharedPreferences sp;//偏好设置
+    private SharedPreferences.Editor editor;
+
+    private int sessionPos = -1;//当前的聊天对象
+
+
 
     //为Activity添加ToolBar
     protected void addActionBar(String title, boolean isBackable) {
@@ -61,7 +72,18 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+        if(sessionCursor != null && sessionPos != -1){
+            sessionCursor.moveToPosition(sessionPos);
+            // 拿到jid(账号)-->发送消息的时候需要
+            String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
+            // 拿到nickName-->显示效果
+            mPresenter.getDialogueMessage(account);
+            otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
+            currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
+
+
+        }
+
     }
 
     @Override
@@ -71,6 +93,10 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         spSession = findViewById(R.id.sp_session);
         mPresenter = new ManagePresenter(mActivity, this);
         mListView = findViewById(R.id.listview);
+
+        sp=getPreferences(MODE_PRIVATE);
+        editor=sp.edit();
+
     }
 
     @Override
@@ -79,6 +105,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         spSession.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sessionPos = position;
                 //toast("you selected:"+position);
                 if(sessionCursor != null){
                     sessionCursor.moveToPosition(position);
@@ -98,6 +125,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
             }
         });
         mListView.setOnItemClickListener(this);
+        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -136,6 +164,11 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         mListView.setAdapter(mCursorAdapter);
         mListView.setSelection(mCursorAdapter.getCount() - 1);
 
+        firstPosition=sp.getInt("firstPosition", -1);
+        top=sp.getInt("top", -1);
+        if(firstPosition!=-1&&top!=-1){
+            mListView.setSelectionFromTop(firstPosition, top);
+        }
     }
 
     @Override
@@ -148,6 +181,25 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         Cursor c = mCursorAdapter.getCursor();
         c.moveToPosition(position);
         mPresenter.inputEmotion(c);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(scrollState==AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+            firstPosition=mListView.getFirstVisiblePosition();
+        }
+        View v=mListView.getChildAt(0);
+        top=v.getTop();
+
+        editor.putInt("firstPosition", firstPosition);
+        editor.putInt("top", top);
+        editor.commit();
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
     }
 
     /**

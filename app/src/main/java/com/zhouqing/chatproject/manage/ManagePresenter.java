@@ -68,6 +68,10 @@ public class ManagePresenter implements ManageContract.Presenter{
         String toAccount = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.TO_ACCOUNT));
         String facePic = cursor.getString(cursor.getColumnIndex(SmsOpenHelper.SmsTable.FACE_PIC));
 
+        if(!fromAccount.equals(IMService.ACCOUNT)){
+            return;
+        }
+
         Intent intent = new Intent(mAcitivity, InputEmotionActivity.class);
 
         intent.putExtra("id", id);
