@@ -32,6 +32,7 @@ import java.util.Date;
 public class ManageActivity extends BaseActivity implements ManageContract.View,AdapterView.OnItemClickListener,AbsListView.OnScrollListener {
 
     private Spinner spSession;
+    private Spinner spEmotion;
     private ListView mListView;
     private ManageContract.Presenter mPresenter;
     private String[] sessions;
@@ -47,6 +48,8 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
     private SharedPreferences.Editor editor;
 
     private int sessionPos = -1;//当前的聊天对象
+
+    private int emotionPos = 0;//标记当前对话属于哪种情绪氛围
 
 
 
@@ -77,11 +80,9 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
             // 拿到jid(账号)-->发送消息的时候需要
             String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
             // 拿到nickName-->显示效果
-            mPresenter.getDialogueMessage(account);
+            mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[emotionPos]);
             otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
             currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
-
-
         }
 
     }
@@ -93,6 +94,10 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         spSession = findViewById(R.id.sp_session);
         mPresenter = new ManagePresenter(mActivity, this);
         mListView = findViewById(R.id.listview);
+
+        spEmotion = findViewById(R.id.sp_emotion);
+        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.EMOTION_ARRAY);
+        spEmotion.setAdapter(shopAdapter);
 
         sp=getPreferences(MODE_PRIVATE);
         editor=sp.edit();
@@ -112,11 +117,32 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
                     // 拿到jid(账号)-->发送消息的时候需要
                     String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
                     // 拿到nickName-->显示效果
-                    mPresenter.getDialogueMessage(account);
+                    mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[emotionPos]);
                     otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
                     currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
                 }
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spEmotion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                emotionPos = position;
+                //Global.EMOTION_ARRAY[position]
+                if(sessionCursor != null && sessionPos != -1){
+                    sessionCursor.moveToPosition(sessionPos);
+                    // 拿到jid(账号)-->发送消息的时候需要
+                    String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
+                    // 拿到nickName-->显示效果
+                    mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[position]);
+                    otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
+                    currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
+                }
             }
 
             @Override

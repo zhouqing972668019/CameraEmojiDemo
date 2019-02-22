@@ -8,7 +8,7 @@ import com.zhouqing.chatproject.common.ui.BaseView;
 public class ManageContract {
     public interface Presenter extends BasePresenter {
         void getContact();
-        void getDialogueMessage(final String clickAccout);
+        void getDialogueMessage(final String clickAccout,String emotion);
         void inputEmotion(Cursor cursor);
     }
 

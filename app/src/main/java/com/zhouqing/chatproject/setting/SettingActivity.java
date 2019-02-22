@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.zhouqing.chatproject.R;
 import com.zhouqing.chatproject.common.ui.BaseActivity;
@@ -48,6 +49,17 @@ public class SettingActivity extends BaseActivity {
                 killAll();
             }
         });
+
+        alertDialog.show();
+    }
+    public void description(View view){
+        View v = View.inflate(this, R.layout.layout_description_dialog, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setView(v);
+        alertDialog.setCanceledOnTouchOutside(true);
+
 
         alertDialog.show();
     }

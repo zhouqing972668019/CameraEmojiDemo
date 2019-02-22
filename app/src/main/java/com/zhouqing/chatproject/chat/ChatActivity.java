@@ -58,11 +58,14 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +101,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private ListView mListView;
     private EditText etChatMessage;
     private Button btnSend;
+    private Spinner spEmotion;
+    private String emotion="";//标记当前对话属于哪种情绪氛围
     //private ImageView iv_more;
     //private ImageView iv_emotion;
     //private FrameLayout fl_emotion;
@@ -161,6 +166,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         //fl_emotion = (FrameLayout) findViewById(R.id.fl_emotion);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        spEmotion = findViewById(R.id.sp_emotion);
+        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.EMOTION_ARRAY);
+        spEmotion.setAdapter(shopAdapter);
+
 
         //获取用户名以及账号
         Intent intent = getIntent();
@@ -182,6 +191,19 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         //iv_emotion.setOnClickListener(this);
         //iv_more.setOnClickListener(this);
         etChatMessage.setOnClickListener(this);
+
+        spEmotion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                emotion = Global.EMOTION_ARRAY[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         //编辑框焦点事件
 //        etChatMessage.setOnFocusChangeListener(new android.view.View.
 //                OnFocusChangeListener() {
@@ -384,7 +406,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 takePicture();
                 // save text
                 saveText(getMessage());
-                mPresenter.sendMessage(mClickAccount,prefix + ".png");
+                mPresenter.sendMessage(mClickAccount,prefix + ".png",emotion);
                 break;
             case R.id.iv_emotion:
                 changeEmotionStatus();

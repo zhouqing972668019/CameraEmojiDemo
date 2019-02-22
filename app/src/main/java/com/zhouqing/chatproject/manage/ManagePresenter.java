@@ -39,14 +39,14 @@ public class ManagePresenter implements ManageContract.Presenter{
     }
 
     @Override
-    public void getDialogueMessage(final String clickAccout) {
+    public void getDialogueMessage(final String clickAccout, final String emotion) {
         ThreadUtil.runOnThread(new Runnable() {
             @Override
             public void run() {
                 final Cursor c = mAcitivity.getContentResolver().query(
                         SmsProvider.URI_SMS, null,
-                        "(from_account = ? and to_account = ?) or (from_account = ? and to_account = ?)",
-                        new String[]{IMService.ACCOUNT, clickAccout, clickAccout, IMService.ACCOUNT}, null);
+                        "((from_account = ? and to_account = ?) or (from_account = ? and to_account = ?)) and type = ?",
+                        new String[]{IMService.ACCOUNT, clickAccout, clickAccout, IMService.ACCOUNT,emotion}, null);
 
                 //显示聊天消息
                 ThreadUtil.runOnUiThread(new Runnable() {
