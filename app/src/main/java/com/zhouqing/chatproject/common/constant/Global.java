@@ -24,7 +24,8 @@ public class Global {
     public static String PROJECT_FILE_PATH
             = Environment.getExternalStorageDirectory() + "/CameraEmojiDemo/";
 
-    public static final String[] EMOTION_ARRAY = {"Neutral","Angry","Disgust","Fear","Happy","Sad","Surprise","chat"};
+    public static final String[] EMOTION_ARRAY = {"Neutral","Angry","Disgust","Fear","Happy","Sad","Surprise"};
+    public static final String[] CONVERSATION_ARRAY = {"场景1","场景2","场景3","场景4","场景5","场景6"};
 
     public static String accountToNickName(String account){
         return account.substring(0,account.indexOf("@"));

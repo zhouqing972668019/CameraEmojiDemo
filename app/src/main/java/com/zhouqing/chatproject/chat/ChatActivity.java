@@ -167,7 +167,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         spEmotion = findViewById(R.id.sp_emotion);
-        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.EMOTION_ARRAY);
+        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.CONVERSATION_ARRAY);
         spEmotion.setAdapter(shopAdapter);
 
 
@@ -195,7 +195,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         spEmotion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                emotion = Global.EMOTION_ARRAY[position];
+                emotion = Global.CONVERSATION_ARRAY[position];
             }
 
             @Override

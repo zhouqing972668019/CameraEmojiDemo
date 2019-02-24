@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -129,7 +128,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
             //ToastUtil.showToast(ManageActivity.this, Arrays.toString(sessions));
             //获取每个聊天对象的各种聊天场景下的聊天内容
             for(String session:sessions){
-                for(String emotionItem:Global.EMOTION_ARRAY){
+                for(String emotionItem:Global.CONVERSATION_ARRAY){
                     StringBuilder sb = new StringBuilder();
                     final Cursor chatCursor = getActivity().getContentResolver().query(
                             SmsProvider.URI_SMS, null,

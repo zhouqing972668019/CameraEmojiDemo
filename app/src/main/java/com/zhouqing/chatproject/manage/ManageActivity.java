@@ -80,7 +80,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
             // 拿到jid(账号)-->发送消息的时候需要
             String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
             // 拿到nickName-->显示效果
-            mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[emotionPos]);
+            mPresenter.getDialogueMessage(account,Global.CONVERSATION_ARRAY[emotionPos]);
             otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
             currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
         }
@@ -96,7 +96,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
         mListView = findViewById(R.id.listview);
 
         spEmotion = findViewById(R.id.sp_emotion);
-        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.EMOTION_ARRAY);
+        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,Global.CONVERSATION_ARRAY);
         spEmotion.setAdapter(shopAdapter);
 
         sp=getPreferences(MODE_PRIVATE);
@@ -117,7 +117,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
                     // 拿到jid(账号)-->发送消息的时候需要
                     String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
                     // 拿到nickName-->显示效果
-                    mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[emotionPos]);
+                    mPresenter.getDialogueMessage(account,Global.CONVERSATION_ARRAY[emotionPos]);
                     otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
                     currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
                 }
@@ -139,7 +139,7 @@ public class ManageActivity extends BaseActivity implements ManageContract.View,
                     // 拿到jid(账号)-->发送消息的时候需要
                     String account = sessionCursor.getString(sessionCursor.getColumnIndex(SmsOpenHelper.SmsTable.SESSION_ACCOUNT));
                     // 拿到nickName-->显示效果
-                    mPresenter.getDialogueMessage(account,Global.EMOTION_ARRAY[position]);
+                    mPresenter.getDialogueMessage(account,Global.CONVERSATION_ARRAY[position]);
                     otherUserAvatarId = XmppUtil.getOtherUserAvatar(account);
                     currentUserAvatarId = XmppUtil.getCurrentUserAvatar();
                 }
