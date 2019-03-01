@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 public class SpanStringUtil {
 	
 	public static SpannableString getEmotionContent(int emotion_map_type, final Context context, final TextView tv, String source) {
+
+		source = filter(source);
 		SpannableString spannableString = new SpannableString(source);
 		Resources res = context.getResources();
 
@@ -43,5 +45,17 @@ public class SpanStringUtil {
 			}
 		}
 		return spannableString;
+	}
+
+	public static String filter(String resource){
+		String result = "";
+		for(int i=0;i<resource.length();i++){
+			char c = resource.charAt(i);
+			if(c == '(' || c == ')' || c == '[' || c == ']'){
+				continue;
+			}
+			result += c;
+		}
+		return result;
 	}
 }
